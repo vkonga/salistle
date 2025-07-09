@@ -4,6 +4,10 @@ import { adminDb } from '@/lib/firebase-admin';
 import type { Story, SerializedStory, StoryPage } from '@/types';
 import StoryView from './story-view';
 
+type StoryPageProps = {
+    params: { id: string };
+};
+
 // Function to fetch story data on the server
 async function getStory(id: string): Promise<Story | null> {
     if (!adminDb) return null;
@@ -36,7 +40,7 @@ async function getStory(id: string): Promise<Story | null> {
 
 // Dynamic metadata generation
 export async function generateMetadata(
-  { params }: { params: { id: string } },
+  { params }: StoryPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const story = await getStory(params.id);
@@ -76,7 +80,7 @@ export async function generateMetadata(
 }
 
 // The page component itself (Server Component)
-export default async function StoryPage({ params }: { params: { id: string } }) {
+export default async function StoryPage({ params }: StoryPageProps) {
   const story = await getStory(params.id);
   
   if (!story) {
