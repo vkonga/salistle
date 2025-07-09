@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users can read and update their own user document.
+    // They cannot create or delete it (creation is handled server-side on sign-up).
+    // They cannot read other users' documents.
+    match /users/{userId} {
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      allow create, delete: if false;
+    }
+
+    // Stories can only be accessed by the user who owns them.
+    match /stories/{storyId} {
+      // Allow read and delete if the user is the owner.
+      // The userId field in the document must match the authenticated user's UID.
+      allow read, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      // Allow create if the incoming document's userId matches the user.
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      
+      // Disallow direct updates to the main story document from the client.
+      allow update: if false;
+
+      // Rules for the 'pages' subcollection.
+      match /pages/{pageId} {
+        // Pages can be read if the user has access to the parent story document.
+        // We check this by getting the parent story and verifying its userId.
+        allow read: if request.auth != null && get(/databases/$(database)/documents/stories/$(storyId)).data.userId == request.auth.uid;
+
+        // Creation and deletion of pages are handled via server actions using the Admin SDK,
+        // which bypasses these rules. We disallow direct client modification.
+        allow write: if false;
+      }
+    }
+  }
+}
