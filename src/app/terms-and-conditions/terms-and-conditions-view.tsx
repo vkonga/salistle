@@ -67,6 +67,16 @@ export default function TermsAndConditionsView() {
               <h3 className="text-xl font-semibold mt-4">Subscriptions</h3>
               <p>Some parts of the Service are billed on a subscription basis ("Subscription(s)"). You will be billed in advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set on a monthly basis.</p>
               <p>At the end of each Billing Cycle, your Subscription will automatically renew under the exact same conditions unless you cancel it or SalistleAI cancels it. You may cancel your Subscription renewal either through your online account management page or by contacting SalistleAI customer support team.</p>
+
+              <h3 className="text-xl font-semibold mt-4">Intellectual Property</h3>
+              <p>The Service and its original content (excluding Content provided by users), features and functionality are and will remain the exclusive property of SalistleAI and its licensors. The Service is protected by copyright, trademark, and other laws of both the India and foreign countries. You retain all rights to any Content you submit, post or display on or through the Service and you are responsible for protecting those rights. We take no responsibility and assume no liability for Content you or any third party posts on or through the Service.</p>
+              
+              <h3 className="text-xl font-semibold mt-4">Termination</h3>
+              <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. Upon termination, your right to use the Service will immediately cease.</p>
+              
+              <h3 className="text-xl font-semibold mt-4">Limitation Of Liability</h3>
+              <p>In no event shall SalistleAI, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>
+
             </section>
 
             <section id="privacy">
@@ -91,9 +101,15 @@ export default function TermsAndConditionsView() {
                 <li>To manage your requests: To attend and manage your requests to us.</li>
               </ul>
 
+              <h3 className="text-xl font-semibold mt-4">Data Security</h3>
+              <p>The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.</p>
+
               <h3 className="text-xl font-semibold mt-4">Changes to this Privacy Policy</h3>
               <p>We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.</p>
               <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+
+              <h3 className="text-xl font-semibold mt-4">Contact Us</h3>
+              <p>If you have any questions about this Privacy Policy, You can contact us by visiting the <Link href="/contact" className="text-primary hover:underline">contact page</Link> on our website.</p>
             </section>
           </CardContent>
         </Card>
