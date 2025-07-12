@@ -61,16 +61,19 @@ export default function StoryView({ story }: { story: SerializedStory }) {
 
     const hasImage = !!page.imageUrl;
 
-    return (
-        <div className={cn(
-            "p-4 md:p-8 h-full overflow-y-auto",
-            hasImage ? "grid md:grid-cols-2 gap-8 items-center" : "flex flex-col justify-center"
-        )}>
-            {hasImage && (
-                <div className="relative aspect-square rounded-lg overflow-hidden bg-muted" onContextMenu={(e) => e.preventDefault()}>
-                    <Image src={page.imageUrl!} alt={page.imagePrompt} layout="fill" objectFit="cover" className="pointer-events-none" />
+    if (hasImage) {
+        return (
+            <div className="relative w-full h-full bg-muted" onContextMenu={(e) => e.preventDefault()}>
+                <Image src={page.imageUrl!} alt={page.imagePrompt} layout="fill" objectFit="cover" className="pointer-events-none" />
+                <div className="absolute bottom-4 right-4 text-sm text-white bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md">
+                    Page {pageIndex + 1}
                 </div>
-            )}
+            </div>
+        );
+    }
+    
+    return (
+        <div className="p-4 md:p-8 h-full overflow-y-auto flex flex-col justify-center">
             <div className="h-full flex flex-col justify-center">
                 <StoryDisplay content={page.text} />
             </div>
