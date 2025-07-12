@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter, notFound } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import Image from 'next/image';
@@ -11,15 +12,8 @@ import SimilarStoriesGenerator from '@/components/similar-stories-generator';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { SerializedStory } from '@/types';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Card, CardContent } from '@/components/ui/card';
 import StoryDisplay from '@/components/story-display';
+import FlippingBook, { BookSheet } from '@/components/flipping-book';
 import { cn } from '@/lib/utils';
 
 export default function StoryView({ story }: { story: SerializedStory }) {
@@ -56,16 +50,99 @@ export default function StoryView({ story }: { story: SerializedStory }) {
                           <Skeleton className="h-6 w-24" />
                       </div>
                   </header>
-                  <Skeleton className="aspect-[4/3] w-full rounded-xl mb-12" />
                   <Skeleton className="aspect-video w-full" />
               </article>
           </div>
       )
   }
 
+  const PageTemplate = ({ page, pageIndex }: { page?: { text: string; imagePrompt: string; imageUrl?: string; }, pageIndex: number }) => {
+    if (!page) return <div className="p-4 md:p-6 bg-background h-full" />;
+
+    const hasImage = !!page.imageUrl;
+
+    return (
+        <div className={cn(
+            "p-4 md:p-8 h-full overflow-y-auto",
+            hasImage ? "grid md:grid-cols-2 gap-8 items-center" : "flex flex-col justify-center"
+        )}>
+            {hasImage && (
+                <div className="relative aspect-square rounded-lg overflow-hidden bg-muted" onContextMenu={(e) => e.preventDefault()}>
+                    <Image src={page.imageUrl!} alt={page.imagePrompt} layout="fill" objectFit="cover" className="pointer-events-none" />
+                </div>
+            )}
+            <div className="h-full flex flex-col justify-center">
+                <StoryDisplay content={page.text} />
+            </div>
+            <div className="absolute bottom-4 right-4 text-sm text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-md">
+              Page {pageIndex + 1}
+            </div>
+        </div>
+    );
+  };
+  
+  const bookSheets = [];
+  const storyPages = story.pages || [];
+
+  // Book Cover
+  bookSheets.push(
+    <BookSheet
+      key="cover"
+      front={
+        <div className="w-full h-full relative" onContextMenu={(e) => e.preventDefault()}>
+            <Image
+                src={story.coverImage}
+                alt={`Cover for ${story.title}`}
+                layout="fill"
+                objectFit="cover"
+                priority
+                className="pointer-events-none rounded-r-lg"
+            />
+        </div>
+      }
+      back={<PageTemplate page={storyPages[0]} pageIndex={0} />}
+    />
+  );
+
+  // Book pages
+  for (let i = 1; i < storyPages.length - 1; i += 2) {
+    bookSheets.push(
+      <BookSheet
+        key={i}
+        front={<PageTemplate page={storyPages[i]} pageIndex={i} />}
+        back={<PageTemplate page={storyPages[i+1]} pageIndex={i+1} />}
+      />
+    )
+  }
+  
+  // Last page if there is an odd number of pages inside the book
+  if (storyPages.length > 1 && (storyPages.length - 1) % 2 !== 0) {
+    const lastPageIndex = storyPages.length - 1;
+     bookSheets.push(
+        <BookSheet
+            key={lastPageIndex}
+            front={<PageTemplate page={storyPages[lastPageIndex]} pageIndex={lastPageIndex} />}
+        />
+    )
+  }
+
+
+  // Back cover
+  bookSheets.push(
+    <BookSheet
+      key="back-cover"
+      front={
+        <div className="w-full h-full flex flex-col items-center justify-center text-center p-4 bg-background">
+          <h2 className="text-3xl font-bold font-headline">The End</h2>
+        </div>
+      }
+    />
+  );
+
+
   return (
     <div className="bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 min-h-screen flex flex-col">
         <div className="mb-6">
           <Button asChild variant="ghost">
             <Link href="/stories">
@@ -75,7 +152,7 @@ export default function StoryView({ story }: { story: SerializedStory }) {
           </Button>
         </div>
 
-        <article className="max-w-4xl mx-auto">
+        <article className="max-w-4xl mx-auto flex-grow flex flex-col justify-center w-full">
           <header className="mb-8 text-center">
             <h1 className="text-4xl md:text-5xl font-bold font-headline mb-2">{story.title}</h1>
             <p className="text-lg text-muted-foreground">by {story.author}</p>
@@ -85,63 +162,11 @@ export default function StoryView({ story }: { story: SerializedStory }) {
             </div>
           </header>
 
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-center mb-4">Cover</h2>
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl shadow-primary/20 bg-muted" onContextMenu={(e) => e.preventDefault()}>
-                <Image
-                    src={story.coverImage}
-                    alt={`Cover for ${story.title}`}
-                    layout="fill"
-                    objectFit="cover"
-                    priority
-                    className="pointer-events-none"
-                />
-            </div>
-          </div>
+          <FlippingBook>
+            {bookSheets}
+          </FlippingBook>
 
-          <h2 className="text-2xl font-bold text-center mb-4">Story Pages</h2>
-          <Carousel className="w-full">
-            <CarouselContent>
-              {(story.pages || []).map((page, index) => {
-                const hasImage = !!page.imageUrl;
-
-                return (
-                  <CarouselItem key={index}>
-                    <div className="p-1">
-                      <Card className="overflow-hidden">
-                        <CardContent className={cn(
-                            "p-6 md:p-8 items-center min-h-[400px] md:min-h-[500px]",
-                            hasImage ? "grid md:grid-cols-2 gap-8" : "flex flex-col justify-center"
-                        )}>
-                          {hasImage && (
-                            <div className="relative aspect-square rounded-lg overflow-hidden bg-muted" onContextMenu={(e) => e.preventDefault()}>
-                              <Image
-                                src={page.imageUrl!}
-                                alt={page.imagePrompt}
-                                layout="fill"
-                                objectFit="cover"
-                                className="bg-muted pointer-events-none"
-                              />
-                            </div>
-                          )}
-                          <div className="h-full flex flex-col justify-center">
-                            <StoryDisplay content={page.text} />
-                          </div>
-                        </CardContent>
-                        <div className="absolute bottom-4 right-4 text-sm text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-md">
-                          Page {index + 1}
-                        </div>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            <CarouselPrevious className="left-2 md:-left-12 bg-background/50 hover:bg-background/80" />
-            <CarouselNext className="right-2 md:-right-12 bg-background/50 hover:bg-background/80" />
-          </Carousel>
-
-          <footer className="mt-12 text-center">
+          <footer className="mt-20 text-center">
             <SimilarStoriesGenerator storyText={story.pages.map(p => p.text).join('\n\n')} />
           </footer>
         </article>
