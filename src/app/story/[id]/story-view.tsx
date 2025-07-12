@@ -57,13 +57,13 @@ export default function StoryView({ story }: { story: SerializedStory }) {
   }
 
   const PageTemplate = ({ page, pageIndex }: { page?: { text: string; imagePrompt: string; imageUrl?: string; }, pageIndex: number }) => {
-    if (!page) return <div className="p-4 md:p-6 bg-background h-full" />;
+    if (!page) return <div className="p-4 md:p-6 bg-black h-full" />;
 
     // If the page has an image, show ONLY the image.
     if (page.imageUrl) {
         return (
-            <div className="relative w-full h-full bg-muted" onContextMenu={(e) => e.preventDefault()}>
-                <Image src={page.imageUrl} alt={page.imagePrompt} layout="fill" objectFit="cover" className="pointer-events-none" />
+            <div className="relative w-full h-full bg-black" onContextMenu={(e) => e.preventDefault()}>
+                <Image src={page.imageUrl} alt={page.imagePrompt} layout="fill" objectFit="contain" className="pointer-events-none" />
                 <div className="absolute bottom-4 right-4 text-sm text-white bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md">
                     Page {pageIndex + 1}
                 </div>
@@ -73,7 +73,7 @@ export default function StoryView({ story }: { story: SerializedStory }) {
     
     // Otherwise, show ONLY the text.
     return (
-        <div className="p-4 md:p-8 h-full overflow-y-auto flex flex-col justify-center">
+        <div className="p-4 md:p-8 h-full overflow-y-auto flex flex-col justify-center bg-black">
             <div className="h-full flex flex-col justify-center">
                 <StoryDisplay content={page.text} />
             </div>
@@ -135,8 +135,8 @@ export default function StoryView({ story }: { story: SerializedStory }) {
     <BookSheet
       key="back-cover"
       front={
-        <div className="w-full h-full flex flex-col items-center justify-center text-center p-4 bg-background">
-          <h2 className="text-3xl font-bold font-headline">The End</h2>
+        <div className="w-full h-full flex flex-col items-center justify-center text-center p-4 bg-black">
+          <h2 className="text-3xl font-bold font-headline text-white">The End</h2>
         </div>
       }
     />

@@ -11,7 +11,7 @@ export default function StoryDisplay({ content }: StoryDisplayProps) {
   const segments = content.split(/([,."?!\s])/);
 
   return (
-    <div className="text-[25px] text-foreground/90 leading-loose text-center">
+    <div className="text-[25px] text-white/90 leading-loose text-center">
       {segments.map((segment, index) => {
         const trimmedSegment = segment.trim();
         if (trimmedSegment.length === 0 || /[,."?!]/.test(trimmedSegment)) {
