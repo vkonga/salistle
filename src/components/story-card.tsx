@@ -73,7 +73,7 @@ export default function StoryCard({ story }: StoryCardProps) {
   };
   
   const openDialog = (e: React.MouseEvent) => {
-    e.preventDefault(); // This is important to stop the link navigation
+    e.preventDefault(); 
     e.stopPropagation();
     setIsAlertOpen(true);
   }
@@ -90,32 +90,30 @@ export default function StoryCard({ story }: StoryCardProps) {
         {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
         <span className="sr-only">Delete story</span>
       </Button>
-      <Link href={`/story/${story.id}`} className="block h-full">
-        <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1" onContextMenu={(e) => e.preventDefault()}>
-          <CardHeader className="p-0 relative">
-            <div className="aspect-[3/2] overflow-hidden">
-              <Image
-                src={story.coverImage}
-                alt={`Cover art for ${story.title}`}
-                width={600}
-                height={400}
-                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 pointer-events-none"
-                data-ai-hint={`${story.theme?.toLowerCase() || 'story'} illustration`}
-              />
-            </div>
-          </CardHeader>
-          <CardContent className="flex-grow p-4">
-            <CardTitle className="text-xl font-headline mb-2 leading-tight">{story.title}</CardTitle>
-            <p className="text-sm text-muted-foreground">by {story.author}</p>
-          </CardContent>
-          <CardFooter className="p-4 pt-0">
-            <div className="flex gap-2">
-              {story.theme && <Badge variant="outline" className={cn(themeColor[story.theme as keyof typeof themeColor])}>{story.theme}</Badge>}
-              <Badge variant="secondary">Age {story.ageGroup}</Badge>
-            </div>
-          </CardFooter>
-        </Card>
-      </Link>
+      <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1" onContextMenu={(e) => e.preventDefault()}>
+        <CardHeader className="p-0 relative">
+          <div className="aspect-[3/2] overflow-hidden">
+            <Image
+              src={story.coverImage}
+              alt={`Cover art for ${story.title}`}
+              width={600}
+              height={400}
+              className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 pointer-events-none"
+              data-ai-hint={`${story.theme?.toLowerCase() || 'story'} illustration`}
+            />
+          </div>
+        </CardHeader>
+        <CardContent className="flex-grow p-4">
+          <CardTitle className="text-xl font-headline mb-2 leading-tight">{story.title}</CardTitle>
+          <p className="text-sm text-muted-foreground">by {story.author}</p>
+        </CardContent>
+        <CardFooter className="p-4 pt-0">
+          <div className="flex gap-2">
+            {story.theme && <Badge variant="outline" className={cn(themeColor[story.theme as keyof typeof themeColor])}>{story.theme}</Badge>}
+            <Badge variant="secondary">Age {story.ageGroup}</Badge>
+          </div>
+        </CardFooter>
+      </Card>
       
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>

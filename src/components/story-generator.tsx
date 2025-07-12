@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { plans } from '@/lib/plans';
-import PricingCard from '@/components/pricing-card';
+import PricingCard from './pricing-card';
 
 
 const ageGroups = ['3-5', '6-8', '9-12'];
@@ -334,11 +334,8 @@ export default function StoryGenerator() {
                         <Wand2 className="mr-2 h-4 w-4" />
                         Create Another
                     </Button>
-                    <Button asChild>
-                        <Link href={`/story/${savedStoryId}`} onClick={() => setIsOpen(false)}>
-                            View Book
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
+                    <Button onClick={() => setIsOpen(false)}>
+                        Done
                     </Button>
                 </>
             ) : (
