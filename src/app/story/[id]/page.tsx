@@ -5,12 +5,6 @@ import { adminDb } from '@/lib/firebase-admin';
 import type { Story, SerializedStory, StoryPage } from '@/types';
 import StoryView from './story-view';
 
-// The props for a Next.js page with dynamic segments
-type PageProps = {
-    params: { id: string };
-    searchParams: { [key: string]: string | string[] | undefined };
-};
-
 // Function to fetch story data on the server
 async function getStory(id: string): Promise<Story | null> {
     if (!adminDb) return null;
@@ -41,9 +35,9 @@ async function getStory(id: string): Promise<Story | null> {
     }
 }
 
-// Dynamic metadata generation
+// Dynamic metadata generation with inline props
 export async function generateMetadata(
-  { params }: PageProps,
+  { params }: { params: { id: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const story = await getStory(params.id);
@@ -82,7 +76,7 @@ export async function generateMetadata(
   }
 }
 
-// The page component itself (Server Component)
+// The page component itself (Server Component) with inline props
 export default async function StoryPage({ params }: { params: { id: string } }) {
   const story = await getStory(params.id);
   
