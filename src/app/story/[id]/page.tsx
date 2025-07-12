@@ -6,7 +6,7 @@ import type { Story, SerializedStory, StoryPage } from '@/types';
 import StoryView from './story-view';
 
 // The props for a Next.js page with dynamic segments
-type StoryPageProps = {
+type PageProps = {
     params: { id: string };
     searchParams: { [key: string]: string | string[] | undefined };
 };
@@ -43,7 +43,7 @@ async function getStory(id: string): Promise<Story | null> {
 
 // Dynamic metadata generation
 export async function generateMetadata(
-  { params }: StoryPageProps,
+  { params }: PageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const story = await getStory(params.id);
@@ -83,7 +83,7 @@ export async function generateMetadata(
 }
 
 // The page component itself (Server Component)
-export default async function StoryPage({ params }: StoryPageProps) {
+export default async function StoryPage({ params }: { params: { id: string } }) {
   const story = await getStory(params.id);
   
   if (!story) {
