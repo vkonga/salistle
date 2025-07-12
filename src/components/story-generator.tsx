@@ -264,28 +264,19 @@ export default function StoryGenerator() {
     }
     
     if (generatedStory) {
-      const PageTemplate = ({ page, imageUrl, pageIndex }: { page?: { text: string }, imageUrl?: string | null, pageIndex: number }) => {
+      const PageTemplate = ({ page, imageUrl }: { page?: { text: string; imagePrompt: string; }, imageUrl?: string | null }) => {
         if (!page) return <div className="p-4 md:p-6 bg-background h-full" />;
 
-        const isDesignatedImagePage = [0, 3, 6, 9].includes(pageIndex);
-        const hasImage = isDesignatedImagePage && !!imageUrl;
+        if (imageUrl) {
+            return (
+                <div className="relative w-full h-full bg-muted" onContextMenu={(e) => e.preventDefault()}>
+                    <Image src={imageUrl} alt={page.imagePrompt} layout="fill" objectFit="cover" className="pointer-events-none" />
+                </div>
+            );
+        }
 
         return (
-            <div className={cn(
-                "p-4 md:p-6 h-full overflow-y-auto",
-                hasImage ? "grid md:grid-cols-2 gap-8 items-center" : "flex flex-col justify-center"
-            )}>
-                {isDesignatedImagePage && (
-                    <div className="relative aspect-square rounded-lg overflow-hidden bg-muted" onContextMenu={(e) => e.preventDefault()}>
-                        {imageUrl ? (
-                            <Image src={imageUrl} alt="Illustration" layout="fill" objectFit="cover" className="pointer-events-none" />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                            </div>
-                        )}
-                    </div>
-                )}
+            <div className="p-4 md:p-8 h-full overflow-y-auto flex flex-col justify-center">
                 <div className="h-full flex flex-col justify-center">
                     <StoryDisplay content={page.text} />
                 </div>
@@ -303,7 +294,7 @@ export default function StoryGenerator() {
               <h2 className="text-3xl font-bold font-headline">{generatedStory.title}</h2>
             </div>
           }
-          back={<PageTemplate page={generatedStory.pages[0]} imageUrl={imageUrls[0]} pageIndex={0} />}
+          back={<PageTemplate page={generatedStory.pages[0]} imageUrl={imageUrls[0]} />}
         />
       );
 
@@ -311,8 +302,8 @@ export default function StoryGenerator() {
         bookSheets.push(
           <BookSheet
             key={i}
-            front={<PageTemplate page={generatedStory.pages[i]} imageUrl={imageUrls[i]} pageIndex={i} />}
-            back={<PageTemplate page={generatedStory.pages[i+1]} imageUrl={imageUrls[i+1]} pageIndex={i+1} />}
+            front={<PageTemplate page={generatedStory.pages[i]} imageUrl={imageUrls[i]} />}
+            back={<PageTemplate page={generatedStory.pages[i+1]} imageUrl={imageUrls[i+1]} />}
           />
         )
       }
