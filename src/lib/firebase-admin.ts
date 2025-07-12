@@ -19,7 +19,7 @@ function initializeFirebaseAdmin() {
     if (!admin.apps.length) {
       try {
         admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount as admin.credential.ServiceAccount),
+          credential: admin.credential.cert(serviceAccount),
         });
         console.log('Firebase Admin SDK initialized successfully.');
         // If initialization is successful, get the services.
