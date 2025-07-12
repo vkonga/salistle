@@ -18,7 +18,7 @@ interface PricingCardProps {
 export default function PricingCard({ plan, user }: PricingCardProps) {
     const { subscription } = useAuth();
     const { isPaying, handlePayment } = useRazorpay();
-    const isCurrentPlan = user && subscription.status === 'subscribed' && subscription.planId === plan.name;
+    const isCurrentPlan = !!(user && subscription.status === 'subscribed' && subscription.planId === plan.name);
     const isProPlan = plan.id === 'plan_pro';
     
     return (
