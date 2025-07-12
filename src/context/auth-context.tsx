@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       setUser(user);
       
-      if (user) {
+      if (user && db) { // <-- Added check for db
         const userDocRef = doc(db, 'users', user.uid);
         
         userSubscriptionUnsubscribe = onSnapshot(userDocRef, (docSnap) => {
