@@ -1,11 +1,14 @@
+
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { adminDb } from '@/lib/firebase-admin';
 import type { Story, SerializedStory, StoryPage } from '@/types';
 import StoryView from './story-view';
 
+// The props for a Next.js page with dynamic segments
 type StoryPageProps = {
     params: { id: string };
+    searchParams: { [key: string]: string | string[] | undefined };
 };
 
 // Function to fetch story data on the server
