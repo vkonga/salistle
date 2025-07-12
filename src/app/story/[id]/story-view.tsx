@@ -77,7 +77,7 @@ export default function StoryView({ story }: { story: SerializedStory }) {
             <div className="h-full flex flex-col justify-center">
                 <StoryDisplay content={page.text} />
             </div>
-            <div className="absolute bottom-4 right-4 text-sm text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-1 rounded-md">
+            <div className="absolute bottom-4 right-4 text-sm text-white/70 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md">
               Page {pageIndex + 1}
             </div>
         </div>
@@ -108,27 +108,15 @@ export default function StoryView({ story }: { story: SerializedStory }) {
   );
 
   // Book pages
-  for (let i = 1; i < storyPages.length - 1; i += 2) {
+  for (let i = 1; i < storyPages.length; i += 2) {
     bookSheets.push(
       <BookSheet
         key={i}
         front={<PageTemplate page={storyPages[i]} pageIndex={i} />}
-        back={<PageTemplate page={storyPages[i+1]} pageIndex={i+1} />}
+        back={storyPages[i+1] ? <PageTemplate page={storyPages[i+1]} pageIndex={i+1} /> : <div className="p-4 md:p-6 bg-black h-full" />}
       />
     )
   }
-  
-  // Last page if there is an odd number of pages inside the book
-  if (storyPages.length > 1 && (storyPages.length - 1) % 2 !== 0) {
-    const lastPageIndex = storyPages.length - 1;
-     bookSheets.push(
-        <BookSheet
-            key={lastPageIndex}
-            front={<PageTemplate page={storyPages[lastPageIndex]} pageIndex={lastPageIndex} />}
-        />
-    )
-  }
-
 
   // Back cover
   bookSheets.push(
@@ -177,3 +165,4 @@ export default function StoryView({ story }: { story: SerializedStory }) {
     </div>
   );
 }
+
